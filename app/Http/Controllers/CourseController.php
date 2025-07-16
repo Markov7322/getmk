@@ -15,7 +15,12 @@ class CourseController extends Controller
     {
         $this->authorize('viewAny', Course::class);
 
-        $courses = Course::with('author')->get();
+        $query = Course::with('author');
+        if (auth()->user()->role === 'author') {
+            $query->where('author_id', auth()->id());
+        }
+        $courses = $query->get();
+
 
         return Inertia::render('Courses/Index', [
             'courses' => $courses,
@@ -57,7 +62,7 @@ class CourseController extends Controller
     {
         $this->authorize('view', $course);
 
-        $course->load('lessons');
+        $course->load('modules.lessons');
 
         return Inertia::render('Courses/Show', [
             'course' => $course,

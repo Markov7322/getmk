@@ -13,7 +13,11 @@ class LessonController extends Controller
      */
     public function index()
     {
+<<<<<<< p5cxck-codex
+        $lessons = Lesson::with('module.course')->get();
+=======
         $lessons = Lesson::with('course')->get();
+>>>>>>> main
 
         return Inertia::render('Lessons/Index', [
             'lessons' => $lessons,
@@ -37,7 +41,11 @@ class LessonController extends Controller
         $this->authorize('create', Lesson::class);
 
         $data = $request->validate([
+<<<<<<< p5cxck-codex
+            'module_id' => 'required|exists:modules,id',
+=======
             'course_id' => 'required|exists:courses,id',
+>>>>>>> main
             'title' => 'required|string|max:255',
             'content' => 'nullable|string',
             'video_url' => 'nullable|url',

@@ -4,25 +4,33 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Course;
+
+use App\Models\Module;
 use App\Models\Comment;
-use App\Models\LessonProgress;
+use App\Models\Progress;
+
 
 class Lesson extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+
+        'module_id',
+
         'course_id',
+
         'title',
         'content',
         'video_url',
         'position',
     ];
 
-    public function course()
+
+    public function module()
     {
-        return $this->belongsTo(Course::class);
+        return $this->belongsTo(Module::class);
+
     }
 
     public function comments()
@@ -32,6 +40,7 @@ class Lesson extends Model
 
     public function progress()
     {
-        return $this->hasMany(LessonProgress::class);
+        return $this->hasMany(Progress::class);
+
     }
 }

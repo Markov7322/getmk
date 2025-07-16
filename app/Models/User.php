@@ -8,7 +8,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Course;
 use App\Models\Enrollment;
+
+use App\Models\Progress;
+
 use App\Models\LessonProgress;
+
 use App\Models\Comment;
 
 class User extends Authenticatable
@@ -61,9 +65,15 @@ class User extends Authenticatable
         return $this->belongsToMany(Course::class)->using(Enrollment::class)->withTimestamps();
     }
 
+
+    public function progress()
+    {
+        return $this->hasMany(Progress::class);
+
     public function lessonProgress()
     {
         return $this->hasMany(LessonProgress::class);
+
     }
 
     public function comments()
