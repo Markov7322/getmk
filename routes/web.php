@@ -15,7 +15,13 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    $courses = [];
+    if (auth()->user()->role === 'author') {
+        $courses = auth()->user()->authoredCourses()->get();
+    }
+    return Inertia::render('Dashboard', [
+        'courses' => $courses,
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

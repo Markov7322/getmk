@@ -37,9 +37,26 @@ class CourseController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'numeric|min:0',
+            'modules' => 'array',
+            'modules.*.title' => 'required_with:modules|string|max:255',
+            'modules.*.lessons' => 'array',
+            'modules.*.lessons.*.title' => 'required_with:modules.*.lessons|string|max:255',
+            'modules.*.lessons.*.content' => 'nullable|string',
         ]);
 
+        $modules = $data['modules'] ?? [];
+        unset($data['modules']);
+
         $course = $request->user()->authoredCourses()->create($data);
+
+        foreach ($modules as $moduleData) {
+            $lessons = $moduleData['lessons'] ?? [];
+            unset($moduleData['lessons']);
+            $module = $course->modules()->create($moduleData);
+            foreach ($lessons as $lessonData) {
+                $module->lessons()->create($lessonData);
+            }
+        }
 
         return redirect()->route('courses.show', $course);
     }
