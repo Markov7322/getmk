@@ -22,6 +22,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::resource('courses', \App\Http\Controllers\CourseController::class)->only(['index','show']);
+    Route::resource('modules', \App\Http\Controllers\ModuleController::class)->only(['show']);
+    Route::resource('lessons', \App\Http\Controllers\LessonController::class)->only(['show']);
+
+    Route::middleware('role:author,admin')->group(function () {
+        Route::resource('courses', \App\Http\Controllers\CourseController::class)->except(['index','show']);
+        Route::resource('modules', \App\Http\Controllers\ModuleController::class)->except(['show']);
+        Route::resource('lessons', \App\Http\Controllers\LessonController::class)->except(['show']);
+    });
+
+    Route::resource('enrollments', \App\Http\Controllers\EnrollmentController::class)->only(['index','store','destroy']);
+    Route::resource('comments', \App\Http\Controllers\CommentController::class)->only(['store','update','destroy']);
 });
 
 require __DIR__.'/auth.php';

@@ -6,6 +6,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Course;
+use App\Models\Enrollment;
+use App\Models\Progress;
+use App\Models\Comment;
 
 class User extends Authenticatable
 {
@@ -21,6 +25,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -44,5 +49,25 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function authoredCourses()
+    {
+        return $this->hasMany(Course::class, 'author_id');
+    }
+
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class)->using(Enrollment::class)->withTimestamps();
+    }
+
+    public function progress()
+    {
+        return $this->hasMany(Progress::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
     }
 }
