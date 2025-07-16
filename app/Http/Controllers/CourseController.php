@@ -21,6 +21,7 @@ class CourseController extends Controller
         }
         $courses = $query->get();
 
+
         return Inertia::render('Courses/Index', [
             'courses' => $courses,
         ]);

@@ -37,7 +37,9 @@ class LessonPolicy
      */
     public function update(User $user, Lesson $lesson): bool
     {
+
         return $user->role === 'admin' || $lesson->module->course->author_id === $user->id;
+
     }
 
     /**
@@ -46,6 +48,7 @@ class LessonPolicy
     public function delete(User $user, Lesson $lesson): bool
     {
         return $user->role === 'admin' || $lesson->module->course->author_id === $user->id;
+        return $user->role === 'admin' || $lesson->course->author_id === $user->id;
     }
 
     /**

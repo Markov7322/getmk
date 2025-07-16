@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Lesson;
+
 use App\Models\Module;
 use App\Models\Enrollment;
 
@@ -25,6 +26,7 @@ class Course extends Model
         return $this->belongsTo(User::class, 'author_id');
     }
 
+
     public function modules()
     {
         return $this->hasMany(Module::class);
@@ -33,6 +35,7 @@ class Course extends Model
     public function lessons()
     {
         return $this->hasManyThrough(Lesson::class, Module::class);
+
     }
 
     public function students()
