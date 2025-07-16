@@ -21,7 +21,7 @@ defineProps({ courses: Array });
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">You're logged in!</div>
                 </div>
-                <div v-if="$page.props.auth.user.role === 'author'">
+                <div v-if="['author','admin'].includes($page.props.auth.user.role)">
                     <h3 class="mb-2 text-lg font-semibold">My Courses</h3>
                     <div v-for="course in courses" :key="course.id" class="mb-1">
                         <Link :href="route('courses.show', course.id)" class="text-blue-600">{{ course.title }}</Link>
