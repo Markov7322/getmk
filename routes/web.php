@@ -15,10 +15,15 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
+    $user = auth()->user();
     $courses = [];
-    if (auth()->user()->role === 'author') {
-        $courses = auth()->user()->authoredCourses()->get();
+
+    if ($user->role === 'author') {
+        $courses = $user->authoredCourses()->get();
+    } elseif ($user->role === 'admin') {
+        $courses = App\Models\Course::with('author')->get();
     }
+
     return Inertia::render('Dashboard', [
         'courses' => $courses,
     ]);
