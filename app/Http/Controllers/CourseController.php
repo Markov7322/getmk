@@ -26,7 +26,7 @@ class CourseController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
-        $course = $request->user()->coursesCreated()->create($data);
+        $course = $request->user()->authoredCourses()->create($data);
         return redirect()->route('courses.show', $course);
     }
 

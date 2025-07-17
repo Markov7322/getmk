@@ -35,7 +35,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function coursesCreated()
+    public function authoredCourses()
     {
         return $this->hasMany(Course::class, 'user_id');
     }
