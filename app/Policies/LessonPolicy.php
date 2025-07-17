@@ -1,10 +1,8 @@
 <?php
-
 namespace App\Policies;
 
 use App\Models\Lesson;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class LessonPolicy
 {
@@ -20,26 +18,16 @@ class LessonPolicy
 
     public function create(User $user): bool
     {
-        return in_array($user->role, ['author', 'admin']);
+        return in_array($user->role, ['admin', 'author']);
     }
 
     public function update(User $user, Lesson $lesson): bool
     {
-        return $user->role === 'admin' || $lesson->module->course->author_id === $user->id;
+        return $user->role === 'admin' || $lesson->module->course->user_id === $user->id;
     }
 
     public function delete(User $user, Lesson $lesson): bool
     {
-        return $user->role === 'admin' || $lesson->module->course->author_id === $user->id;
-    }
-
-    public function restore(User $user, Lesson $lesson): bool
-    {
-        return $this->delete($user, $lesson);
-    }
-
-    public function forceDelete(User $user, Lesson $lesson): bool
-    {
-        return $this->delete($user, $lesson);
+        return $this->update($user, $lesson);
     }
 }

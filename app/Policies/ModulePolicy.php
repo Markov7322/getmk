@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Policies;
 
 use App\Models\Module;
@@ -19,25 +18,15 @@ class ModulePolicy
 
     public function create(User $user): bool
     {
-        return in_array($user->role, ['author', 'admin']);
+        return in_array($user->role, ['admin', 'author']);
     }
 
     public function update(User $user, Module $module): bool
     {
-        return $user->role === 'admin' || $module->course->author_id === $user->id;
+        return $user->role === 'admin' || $module->course->user_id === $user->id;
     }
 
     public function delete(User $user, Module $module): bool
-    {
-        return $this->update($user, $module);
-    }
-
-    public function restore(User $user, Module $module): bool
-    {
-        return $this->update($user, $module);
-    }
-
-    public function forceDelete(User $user, Module $module): bool
     {
         return $this->update($user, $module);
     }

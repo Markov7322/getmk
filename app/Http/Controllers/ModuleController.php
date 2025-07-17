@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Module;
@@ -8,18 +7,11 @@ use Inertia\Inertia;
 
 class ModuleController extends Controller
 {
-    public function index()
-    {
-        $modules = Module::with('course')->get();
-        return Inertia::render('Modules/Index', [
-            'modules' => $modules,
-        ]);
-    }
-
     public function create()
     {
         $this->authorize('create', Module::class);
-        return Inertia::render('Modules/Create');
+        $courseId = request('course');
+        return Inertia::render('Modules/Create', ['courseId' => $courseId]);
     }
 
     public function store(Request $request)
@@ -35,18 +27,14 @@ class ModuleController extends Controller
 
     public function show(Module $module)
     {
-        $this->authorize('view', $module);
-        return Inertia::render('Modules/Show', [
-            'module' => $module->load('lessons'),
-        ]);
+        $module->load('lessons');
+        return Inertia::render('Modules/Show', ['module' => $module]);
     }
 
     public function edit(Module $module)
     {
         $this->authorize('update', $module);
-        return Inertia::render('Modules/Edit', [
-            'module' => $module,
-        ]);
+        return Inertia::render('Modules/Edit', ['module' => $module]);
     }
 
     public function update(Request $request, Module $module)
@@ -63,6 +51,6 @@ class ModuleController extends Controller
     {
         $this->authorize('delete', $module);
         $module->delete();
-        return redirect()->back();
+        return redirect()->route('courses.show', $module->course_id);
     }
 }

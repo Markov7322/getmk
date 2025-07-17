@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Course;
@@ -10,17 +9,8 @@ class CourseController extends Controller
 {
     public function index()
     {
-        $this->authorize('viewAny', Course::class);
-
-        $query = Course::with('author');
-        if (auth()->user()->role === 'author') {
-            $query->where('author_id', auth()->id());
-        }
-        $courses = $query->get();
-
-        return Inertia::render('Courses/Index', [
-            'courses' => $courses,
-        ]);
+        $courses = Course::with('author')->get();
+        return Inertia::render('Courses/Index', ['courses' => $courses]);
     }
 
     public function create()
@@ -32,65 +22,34 @@ class CourseController extends Controller
     public function store(Request $request)
     {
         $this->authorize('create', Course::class);
-
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'price' => 'numeric|min:0',
-            'modules' => 'array',
-            'modules.*.title' => 'required_with:modules|string|max:255',
-            'modules.*.lessons' => 'array',
-            'modules.*.lessons.*.title' => 'required_with:modules.*.lessons|string|max:255',
-            'modules.*.lessons.*.content' => 'nullable|string',
         ]);
-
-        $modules = $data['modules'] ?? [];
-        unset($data['modules']);
-
-        $course = $request->user()->authoredCourses()->create($data);
-
-        foreach ($modules as $moduleData) {
-            $lessons = $moduleData['lessons'] ?? [];
-            unset($moduleData['lessons']);
-            $module = $course->modules()->create($moduleData);
-            foreach ($lessons as $lessonData) {
-                $module->lessons()->create($lessonData);
-            }
-        }
-
+        $course = $request->user()->coursesCreated()->create($data);
         return redirect()->route('courses.show', $course);
     }
 
     public function show(Course $course)
     {
-        $this->authorize('view', $course);
-        $course->load('modules.lessons');
-
-        return Inertia::render('Courses/Show', [
-            'course' => $course,
-        ]);
+        $course->load('modules');
+        return Inertia::render('Courses/Show', ['course' => $course]);
     }
 
     public function edit(Course $course)
     {
         $this->authorize('update', $course);
-        return Inertia::render('Courses/Edit', [
-            'course' => $course,
-        ]);
+        return Inertia::render('Courses/Edit', ['course' => $course]);
     }
 
     public function update(Request $request, Course $course)
     {
         $this->authorize('update', $course);
-
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'price' => 'numeric|min:0',
         ]);
-
         $course->update($data);
-
         return redirect()->route('courses.show', $course);
     }
 

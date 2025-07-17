@@ -1,6 +1,7 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+
 defineProps({ lesson: Object });
 </script>
 
@@ -10,9 +11,8 @@ defineProps({ lesson: Object });
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">{{ lesson.title }}</h2>
         </template>
-        <div class="py-6 space-y-4">
-            <p v-if="lesson.content" v-html="lesson.content" />
-            <video v-if="lesson.video_url" controls :src="lesson.video_url" class="w-full" />
+        <div class="py-6">
+            <p>{{ lesson.content }}</p>
         </div>
     </AuthenticatedLayout>
 </template>

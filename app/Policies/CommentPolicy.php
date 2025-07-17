@@ -37,7 +37,7 @@ class CommentPolicy
      */
     public function update(User $user, Comment $comment): bool
     {
-        return $user->role === 'admin' || $comment->user_id === $user->id || $comment->lesson->course->author_id === $user->id;
+        return $user->role === 'admin' || $comment->user_id === $user->id || $comment->lesson->course->user_id === $user->id;
     }
 
     /**
